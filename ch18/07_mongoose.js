@@ -1,4 +1,4 @@
-var Movie = require('./model').Movie;
+var Movie = require('./06_model').Movie;
 
 // saveInitialData();
 findData();
@@ -24,7 +24,6 @@ function saveInitialData() {
    console.log('Document Save success : ', product, numAffected);
    });
 
-
    // Promise Based
    // notDefined는 스키마에 정의된 항목이 아니다. - 저장 안됨
    var starwars = new Movie({title:'스타워즈7', director:'JJ 에이브럼스', year:2015, notDefined:true});
@@ -37,7 +36,6 @@ function saveInitialData() {
    Movie.create({title:'아바타', director:'제임스 카메론', year:2010}).then(resolved, rejected);
    Movie.create({ title: '다크 나이트', director: '크리스토퍼 놀란', year: 2008 }).then(resolved, rejected);
 }
-
 
 function findData() {
    // 콜백을 이용한 검색
