@@ -3,13 +3,14 @@ module.exports.eachview = function(id, title, writer, time, content) {
         <!doctype html>
         <html>
         <head>
-            <title>MongoDB로 만든 게시판</title>
+            <title>View - MongoDB로 만든 게시판</title>
             <meta charset="utf-8">
         </head>
         <body>
             <h1>MongoDB로 만든 게시판</h1>
             <h4><a href="/update?id=${id}">수정</a>&nbsp;&nbsp;<a href="/">홈으로</a></h4>
             <hr><br>
+            <h3>글 보기</h3><br>
             <table>
                 <tr><th>항목</th><th>내용</th></tr>
                 <tr><td>ID</td><td>${id}</td></tr>
