@@ -3,10 +3,8 @@ function sayHello() {
 }
 sayHello();
 setTimeout(function() {
-	sayHello();
-}, 2*1000);
+	console.log('Timeout');
+}, 1000);
 
-// 반복
-setInterval(function() {
-	sayHello();
-}, 2*1000);
+var t = setTimeout(sayHello, 2*1000);
+clearTimeout(t);

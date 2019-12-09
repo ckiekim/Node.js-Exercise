@@ -6,5 +6,6 @@ var obj = {
 
 console.log('hello world');
 console.log('intVal : ' + intVal);
+// 객체형 출력
 console.log('obj : ' + obj);
 console.log('obj : ', obj);
