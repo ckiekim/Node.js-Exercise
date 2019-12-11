@@ -1,5 +1,6 @@
 var http = require('http');
 var url = require('url');
+
 var server = http.createServer(function(req, res) {
 	// URL 분석 : 쿼리 문자열
 	var parsed = url.parse(req.url, true);
@@ -19,9 +20,8 @@ var server = http.createServer(function(req, res) {
 			result += i;
 		}
 		res.statusCode = 200;
-		res.end('Result : ' + result);
+		res.end('<h1>Result : ' + result + '</h1>');
 	}
-
 }).listen(3000);
 
 // http://127.0.0.1:3000/cal?start=1&end=10

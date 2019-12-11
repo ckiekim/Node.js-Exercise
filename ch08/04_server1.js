@@ -13,6 +13,5 @@ var server = http.createServer(function(req, res) {
 			res.setHeader('Content-type', 'image/jpg');		
 			res.end(data);
 		});
-		
 	});
 }).listen(3000);

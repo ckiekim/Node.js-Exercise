@@ -4,13 +4,13 @@ var fs = require('fs');
 try {
     var data = fs.readFileSync('none_exist.txt', 'utf-8');
 } catch ( exception ) {
-    console.error('Readfile Error : ', exception);
+    console.error('Readfile Sync Error : ', exception);
 }
 
 // 비동기식
 fs.readFile('none_exist.txt', 'utf-8', function(err, data) {
     if ( err ) {
-        console.error('Readfile error ', err);
+        console.error('Readfile Async error ', err);
     } else {
         // 정상 처리        
     }   

@@ -14,27 +14,30 @@ server.listen(3000);
 
 function showList(req, res) {
     res.writeHeader(200, { 'Content-Type': 'text/html; charset=UTF-8' });
-    res.write('<html>');
-    res.write('<meta charset="UTF-8">');
-    res.write('<body>');
-
-    res.write('<h3>Favorite Movie</h3>');
-    res.write('<div><ul>');
-
+    lis = '';
     movieList.forEach(function (item) {
-        res.write('<li>' + item.title + '(' + item.director + ')</li>');
+        lis += `<li>${item.title}(${item.director})</li>`
     }, this);
-    res.write('</ul></div>');
-
-    res.write(
-        '<form method="post" action="."><h4>새 영화 입력</h4>' +
-        '<div><input type="text" name="title" placeholder="영화제목"></div>' +
-        '<div><input type="text" name="director" placeholder="감독"></div>' +
-        '<input type="submit" value="upload">' +
-        '</form>'
-        );
-    res.write('</body>');
-    res.write('</html>');
+    res.write(`
+        <!doctype html>
+        <html>
+        <head>
+            <title>Favorite Movie</title>
+            <meta charset="utf-8">
+        </head>
+        <body>
+            <h3>Favorite Movie</h3>
+            <div><ul>
+                ${lis}
+            </ul></div>
+            <form method="post" action="."><h4>새 영화 입력</h4>
+                <div><input type="text" name="title" placeholder="영화제목"></div>
+                <div><input type="text" name="director" placeholder="감독"></div>
+                <input type="submit" value="upload">
+            </form>
+        </body>
+        </html>
+    `);
     res.end();
 }
 
@@ -50,8 +53,7 @@ function addNewMovie(req, res) {
         
         movieList.push({title:title, director:director});
         
-        //res.end('Success');
-        res.statusCode = 302;
+        res.statusCode = 302;   // Redirection - 클라이언트 주소 이동
         res.setHeader('Location', '.');
         res.end();
     });

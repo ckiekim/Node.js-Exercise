@@ -1,14 +1,15 @@
 {
-  "name": "ch05",
+  "name": "ch08",
   "version": "1.0.0",
   "description": "",
-  "main": "01_nodemonTest.js",
+  "main": "01_helloWorld.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "async": "^3.1.0"
+    "async": "^3.1.0",
+    "express": "^4.17.1"
   }
 }

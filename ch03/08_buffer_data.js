@@ -4,8 +4,8 @@ var buffer = new Buffer(6);
 
 buffer.writeInt8(1, 0); // 01
 buffer.writeUInt8(0xFF, 1); // FF
-buffer.writeUInt16LE(0xFF, 2); // FF 00
-buffer.writeUInt16BE(0xFF, 4); // 00 FF
+buffer.writeUInt16LE(0xFF, 2); // FF 00, Little Endian
+buffer.writeUInt16BE(0xFF, 4); // 00 FF, Big Endian
 
 console.log('HEX :', buffer.toString('hex'));
 

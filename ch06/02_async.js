@@ -2,7 +2,8 @@ function task1(callback) {
 	console.log('Task1 시작');
 	setTimeout(function() {
 		console.log('Task1 끝');
-		callback('Error', null);
+		callback(null, 'Task1 결과');
+		//callback('Task1 Error', null);
 	}, 300);
 }
 

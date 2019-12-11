@@ -1,4 +1,6 @@
 var pathUtil = require('path');
+console.log('Filename: ' + __filename);
+console.log('Directory: ' + __dirname + '\n');
 
 //
 // 경로 분석
