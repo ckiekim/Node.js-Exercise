@@ -1,0 +1,23 @@
+CREATE TABLE IF NOT EXISTS bbs (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    title TEXT NOT NULL,
+    writer TEXT NOT NULL,
+    timestamp datetime DEFAULT CURRENT_TIMESTAMP,
+    content TEXT);
+
+INSERT INTO bbs(id, title, writer, content) VALUES(101, 't1', 'w1', 'content 1');
+SELECT * FROM bbs;
+
+INSERT INTO bbs(title, writer, content) VALUES('t2', 'w2', 'content 2');
+SELECT id, title, writer, datetime(timestamp, 'localtime'), content FROM bbs;
+
+SELECT datetime('now', 'localtime');
+
+CREATE TABLE test (
+  id integer primary key autoincrement,
+  timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+  tmp TEXT not null);
+
+INSERT INTO test(id, tmp) VALUES(101, 'Test');
+INSERT INTO test(tmp) VALUES('Test 2');
+SELECT id, datetime(timestamp, 'localtime'), tmp FROM test;
