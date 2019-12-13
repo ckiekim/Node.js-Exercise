@@ -9,7 +9,7 @@ db.each(sql_ts, function(err, row) {
 });
 
 // YYYYmmddHHMM 형식으로 날짜/시간 읽기
-sql_ts = "SELECT strftime('%m%d%H%M', datetime(timestamp, 'localtime')) ts FROM bbs";
+sql_ts = "SELECT strftime('%m%d%H%M', timestamp, 'localtime') ts FROM bbs";
 db.each(sql_ts, function(err, row) {
     console.log(row.ts);
 });
@@ -23,12 +23,12 @@ db.all(sql, function(err, rows) {
 });	
 
 // 라인단위 추출
-sql = "SELECT id, title, writer, strftime('%m%d%H%M', datetime(timestamp, 'localtime')) ts, content FROM bbs";
+sql = "SELECT id, title, writer, strftime('%m%d%H%M', timestamp, 'localtime') ts, content FROM bbs";
 db.each(sql, function(err, row) {
     console.log('each', row.id, row.title, row.writer, row.ts, row.content);
 });
 
-sql = "SELECT strftime('%Y%m%d%H%M', datetime('now', 'localtime')) ts";
+sql = "SELECT strftime('%Y%m%d%H%M', 'now', 'localtime') ts";
 db.get(sql, function(err, row) {
     console.log(row.ts);
 });

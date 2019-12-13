@@ -2,8 +2,7 @@ var sqlite3 = require('sqlite3').verbose();
 var file = "db/my.db";
 var db = new sqlite3.Database(file);
 
-var sql = "INSERT INTO bbs(id, title, writer, content) ";
-sql += "VALUES(101, 't1', 'w1', 'content 1')";
+var sql = "INSERT INTO bbs(id, title, writer, content) VALUES(101, 't1', 'w1', 'content 1')";
 db.run(sql);
 
 sql = 'INSERT INTO bbs(title, writer, content) VALUES(?, ?, ?)';
