@@ -14,7 +14,7 @@ db.serialize(function() {
     stmt.run(title, writer, content);
     stmt.finalize();
 
-    db.each("SELECT * FROM Bbs", function(err, row) {
+    db.each("SELECT * FROM bbs", function(err, row) {
         console.log(row.id, row.title, row.writer, row.timestamp, row.content);
     });
 });

@@ -33,4 +33,11 @@ db.get(sql, function(err, row) {
     console.log(row.ts);
 });
 
+sql = "SELECT id, title, writer, strftime('%m-%d %H:%M', timestamp, 'localtime') ts, content FROM bbs WHERE id=?";
+var stmt = db.prepare(sql);
+stmt.get(101, function(err, row) {
+    console.log('stmt', row.id, row.title, row.writer, row.ts, row.content);
+});
+stmt.finalize();
+
 db.close();

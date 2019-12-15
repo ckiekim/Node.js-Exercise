@@ -7,6 +7,7 @@ var sql_ts2 = "SELECT strftime('%m%d%H%M', datetime(timestamp, 'localtime')) ts 
 var sql_ts3 = "SELECT strftime('%Y%m%d%H%M', datetime('now', 'localtime')) ts";
 var sql1 = "SELECT id, title, writer, datetime(timestamp, 'localtime') ts, content FROM bbs";
 var sql2 = "SELECT id, title, writer, strftime('%m%d%H%M', timestamp, 'localtime') ts, content FROM bbs";
+var sql3 = "SELECT id, title, writer, content FROM bbs WHERE id=?";
 
 db.serialize(function() {
     db.each(sql_ts1, function(err, row) {
@@ -30,6 +31,13 @@ db.serialize(function() {
     db.each(sql2, function(err, row) {
         console.log('each', row.id, row.title, row.writer, row.ts, row.content);
     });
+
+    
+    var stmt = db.prepare(sql3);
+    stmt.get(101, function(err, row) {
+        console.log('stmt', row.id, row.title, row.writer, row.content);
+    });
+    stmt.finalize();
 });
 
 db.close();
