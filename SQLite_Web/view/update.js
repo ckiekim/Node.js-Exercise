@@ -16,7 +16,7 @@ module.exports.update = function(id, title, writer, ts, content) {
                 <table>
                     <tr><th>항목</th><th>내용</th></tr>
                     <tr><td>ID</td><td>${id}</td></tr>
-                    <tr><td>제목</td><td><input type="text" name="title" value=${title}></td></tr>
+                    <tr><td>제목</td><td><input type="text" name="title" value="${title}"></td></tr>
                     <tr><td>글쓴이</td><td>${writer}</td></tr>
                     <tr><td>최종 수정시간</td><td>${ts}</td></tr>
                     <tr><td>내용</td><td><textarea rows="10" cols="80" name="content">${content}</textarea></td></tr>
