@@ -1,3 +1,8 @@
+# Added by CK Kim
+package.json
+package-lock.json
+db/
+
 # Logs
 logs
 *.log
