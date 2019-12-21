@@ -1,5 +1,6 @@
 /*
- *  MVC BBS Web
+ *  Sample BBS Web
+ *    - XSS(Cross Site Scripting) 방지
  *    - 사용 모듈: sqlite3, express, body-parser, express-session, session-file-store, bcrypt-nodejs
  *    - 게시판 기능: 목록, 생성, 조회, 수정, 삭제, 로그인/로그아웃, 사용자 등록
  */
@@ -9,6 +10,7 @@ var bcrypt = require('bcrypt-nodejs');
 var express = require('express');
 const session = require('express-session');
 const FileStore = require('session-file-store')(session);
+var sanitizeHtml = require('sanitize-html');
 
 var miscView = require('./view2/misc');
 var app = express();
@@ -58,9 +60,14 @@ app.get('/create', function(req, res) {
     res.end(html);
 });
 app.post('/create_proc', function(req, res) {   
-    var title = req.body.title;
+    var _title = req.body.title;
+    var title = sanitizeHtml(_title);
     var writer = req.session.userId;
-    var content = req.body.content.replace(/\r\n/g, '<br>');
+    var _content = req.body.content.replace(/\r\n/g, '<br>');
+    var content = sanitizeHtml(_content, {
+        allowedTags: ['img'],
+        allowedAttributes: {'img': ['src', 'width', 'height']},
+    });
 
     dbModule.insertItem(title, writer, content, function(result) {
         console.log('id =', result, '글이 생성되었습니다.');
@@ -90,8 +97,12 @@ app.get('/update', function(req, res) {
 });
 app.post('/update_proc', function(req, res) { 
     var idVal = parseInt(req.body.id);
-    var title = req.body.title;
-    var content = req.body.content.replace(/\r\n/g, '<br>');
+    var title = sanitizeHtml(req.body.title);
+    var _content = req.body.content.replace(/\r\n/g, '<br>');;
+    var content = sanitizeHtml(_content, {
+        allowedTags: ['img'],
+        allowedAttributes: {'img': ['src', 'width', 'height']},
+    });
 
     dbModule.updateItem(idVal, title, content, function() {
         console.log('id =', idVal, '글이 수정되었습니다.');

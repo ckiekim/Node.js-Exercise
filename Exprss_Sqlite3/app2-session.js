@@ -1,5 +1,6 @@
 /*
  *  Sample BBS Web
+ *    - 세션 추가
  *    - 사용 모듈: sqlite3, express, body-parser, express-session, session-file-store, bcrypt-nodejs
  *    - 게시판 기능: 목록, 생성, 조회, 수정, 삭제, 로그인/로그아웃, 사용자 등록
  */

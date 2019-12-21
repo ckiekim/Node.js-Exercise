@@ -1,3 +1,9 @@
+/*
+ *  Sample BBS Web
+ *    - Express 사용
+ *    - 사용 모듈: sqlite3, express, body-parser, bcrypt-nodejs
+ *    - 게시판 기능: 목록, 생성, 조회, 수정, 삭제, 로그인/로그아웃, 사용자 등록
+ */
 var sqlite3 = require('sqlite3').verbose(); 
 var listSql = "SELECT id, title, writer, strftime('%m-%d %H:%M', timestamp, 'localtime') ts FROM bbs";
 var viewSql = "SELECT id, title, writer, strftime('%Y-%m-%d %H:%M', timestamp, 'localtime') ts, content FROM bbs WHERE id=?";
