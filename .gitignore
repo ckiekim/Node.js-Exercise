@@ -2,6 +2,7 @@
 package.json
 package-lock.json
 db/
+sessions/
 
 # Logs
 logs
