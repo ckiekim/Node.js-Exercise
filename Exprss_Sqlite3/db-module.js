@@ -55,7 +55,7 @@ module.exports = {
         var updateSql = "UPDATE bbs SET title=?, timestamp=datetime('now'), content=? WHERE id=?";
         var stmt = db.prepare(updateSql);
         stmt.run(title, content, idVal, function() {
-            console.log('updateItem:', idVal, title, content);
+            //console.log('updateItem:', idVal, title, content);
             stmt.finalize();
             callback();
         });
@@ -66,7 +66,7 @@ module.exports = {
         var deleteSql = "DELETE FROM bbs WHERE id=?";
         var stmt = db.prepare(deleteSql);
         stmt.run(idVal, function() {
-            console.log('deleteItem:', idVal);
+            //console.log('deleteItem:', idVal);
             stmt.finalize();
             callback();
         });

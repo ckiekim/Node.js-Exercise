@@ -1,6 +1,6 @@
 /*
  *  Sample BBS Web
- *    - XSS(Cross Site Scripting) 방지
+ *    - Open API 이용하여 날씨정보 제공
  *    - 사용 모듈: sqlite3, express, body-parser, express-session, session-file-store, bcrypt-nodejs
  *    - 게시판 기능: 목록, 생성, 조회, 수정, 삭제, 로그인/로그아웃, 사용자 등록
  */
@@ -12,7 +12,7 @@ const session = require('express-session');
 const FileStore = require('session-file-store')(session);
 var sanitizeHtml = require('sanitize-html');
 
-var miscView = require('./view2/misc');
+var miscView = require('./view5/misc');
 var app = express();
 var bodyParser = require('body-parser');        // POST 처리
 app.use(bodyParser.urlencoded({extended: false}));
@@ -23,43 +23,46 @@ app.use(session({
     saveUninitialized: true,
     store: new FileStore()
 }));
-
-var request = require('request');
+var wm = require('./weather-module');
 
 app.get('/', function(req, res) {
-    var navbar = '';
     if (req.query.id === undefined) {
-        navbar = miscView.homeNav(req.session);
-        //console.log('Session:', req.session);
         var tr = '';
         dbModule.listItems(function(rows) {
             rows.forEach(function (row) {
                 tr += miscView.tableRow(row.id, row.title, row.writer, row.ts);
                 //console.log(row.id, row.title, row.writer, row.ts);
             });
-            var view = require('./view2/list');
-            var html = view.list(navbar, tr);
-            res.writeHead(200);
-            res.end(html);
+            wm.getWeather(function(weather) {
+                var navbar = miscView.homeNav(req.session, weather); 
+                var view = require('./view5/list');
+                var html = view.list(navbar, tr);
+                res.writeHead(200);
+                res.end(html);
+            });
         });
     } else {    // 게시판 개별 글 상세조회
-        var navbar = miscView.navBar(req.session);
         //console.log('게시판 개별 글 상세조회', req.query.id);
         dbModule.viewItem(parseInt(req.query.id), function(result) {
-            var view = require('./view2/eachview');
-            var html = view.eachview(navbar, result.id, result.title, result.writer, result.ts, result.content);
-            res.writeHead(200);
-            res.end(html);
-            //console.log(result.id, result.title, result.writer, result.ts, result.content);
+            wm.getWeather(function(weather) {
+                var navbar = miscView.navBar(req.session, weather);
+                var view = require('./view5/eachview');
+                var html = view.eachview(navbar, result.id, result.title, result.writer, result.ts, result.content);
+                res.writeHead(200);
+                res.end(html);
+                //console.log(result.id, result.title, result.writer, result.ts, result.content);
+            });
         });
     }
 });
 app.get('/create', function(req, res) {
-    var navbar = miscView.navBar(req.session);
-    var view = require('./view2/create');
-    var html = view.create(navbar);
-    res.writeHead(200);
-    res.end(html);
+    wm.getWeather(function(weather) {
+        var navbar = miscView.navBar(req.session, weather);
+        var view = require('./view5/create');
+        var html = view.create(navbar);
+        res.writeHead(200);
+        res.end(html);
+    });
 });
 app.post('/create_proc', function(req, res) {   
     var _title = req.body.title;
@@ -80,15 +83,17 @@ app.post('/create_proc', function(req, res) {
 app.get('/update', function(req, res) {
     dbModule.viewItem(parseInt(req.query.id), function(result) {
         if (result.writer === req.session.userId) {  
-            var navbar = miscView.navBar(req.session);
-            var view = require('./view2/update');
-            var content = result.content.replace(/<br>/g, '\r\n');
-            var html = view.update(navbar, result.id, result.title, result.writer, result.ts, content);
-            res.writeHead(200);
-            res.end(html);
-            //console.log(result.id, result.title, result.writer, result.ts, result.content);         
+            wm.getWeather(function(weather) {
+                var navbar = miscView.navBar(req.session, weather);
+                var view = require('./view5/update');
+                var content = result.content.replace(/<br>/g, '\r\n');
+                var html = view.update(navbar, result.id, result.title, result.writer, result.ts, content);
+                res.writeHead(200);
+                res.end(html);
+                //console.log(result.id, result.title, result.writer, result.ts, result.content);
+            });     
         } else {
-            var view = require('./view2/alertMsg');
+            var view = require('./view5/alertMsg');
             var message = '수정 권한이 없습니다.';
             var url = '/';
             var html = view.alertMsg(message, url);
@@ -115,14 +120,16 @@ app.post('/update_proc', function(req, res) {
 app.get('/delete', function(req, res) {
     dbModule.viewItem(parseInt(req.query.id), function(result) {
         if (result.writer === req.session.userId) {
-            var navbar = miscView.navBar(req.session);   
-            var view = require('./view2/delete');
-            var html = view.delete(navbar, req.query.id);
-            res.writeHead(200);
-            res.end(html);
-            //console.log(result.id, result.title, result.writer, result.ts, result.content);         
+            wm.getWeather(function(weather) {
+                var navbar = miscView.navBar(req.session, weather);   
+                var view = require('./view5/delete');
+                var html = view.delete(navbar, req.query.id);
+                res.writeHead(200);
+                res.end(html);
+                //console.log(result.id, result.title, result.writer, result.ts, result.content);  
+            });       
         } else {
-            var view = require('./view2/alertMsg');
+            var view = require('./view5/alertMsg');
             var message = '삭제 권한이 없습니다.';
             var url = '/';
             var html = view.alertMsg(message, url);
@@ -140,10 +147,12 @@ app.post('/delete_proc', function(req, res) {
     });
 });
 app.get('/register', function(req, res) {
-    var view = require('./view2/register');
-    var html = view.register();
-    res.writeHead(200);
-    res.end(html);
+    wm.getWeather(function(weather) {
+        var view = require('./view5/register');
+        var html = view.register(weather);
+        res.writeHead(200);
+        res.end(html);
+    });
 });
 app.post('/register_proc', function(req, res) {
     var userId = req.body.id;
@@ -158,7 +167,7 @@ app.post('/register_proc', function(req, res) {
         if (result === undefined) {
             // 패스워드가 동일한지 확인
             if (password !== password2) {
-                var view = require('./view2/alertMsg');
+                var view = require('./view5/alertMsg');
                 var message = '패스워드가 일치하지 않습니다. 다시 입력하세요.';
                 var url = '/register';
                 var html = view.alertMsg(message, url);
@@ -183,7 +192,7 @@ app.post('/register_proc', function(req, res) {
             }
         } else {
             console.log(userId, '중복된 사용자 ID 있음');
-            var view = require('./view2/alertMsg');
+            var view = require('./view5/alertMsg');
             var message = 'ID가 이미 존재합니다. 다른 ID를 사용하세요.';
             var url = '/register';
             var html = view.alertMsg(message, url);
@@ -193,10 +202,12 @@ app.post('/register_proc', function(req, res) {
     });
 });
 app.get('/login', function(req, res) {
-    var view = require('./view2/login');
-    var html = view.login();
-    res.writeHead(200);
-    res.end(html);
+    wm.getWeather(function(weather) {
+        var view = require('./view5/login');
+        var html = view.login(weather);
+        res.writeHead(200);
+        res.end(html);
+    });
 });
 app.post('/login_proc', function(req, res) {
     var userId = req.body.id;
@@ -206,7 +217,7 @@ app.post('/login_proc', function(req, res) {
     dbModule.getPassword(userId, function(result) {
         if (result === undefined) {
             console.log(userId, "없는 사용자 ID 에러");
-            var view = require('./view2/login');
+            var view = require('./view5/login');
             var html = view.login();
             res.writeHead(200);
             res.end(html);
@@ -225,7 +236,7 @@ app.post('/login_proc', function(req, res) {
                     res.end();
                 } else {
                     console.log(userId, "패스워드 불일치");
-                    var view = require('./view2/login');
+                    var view = require('./view5/login');
                     var html = view.login();
                     res.writeHead(200);
                     res.end(html);
@@ -239,39 +250,13 @@ app.get('/logout', function(req, res) {
     res.writeHead(302, {Location: '/'});
     res.end();    
 });
-
 app.get('/weather', function(req, res) {
-    var apiKey = '9e9e4eefc93b5af91c70bd666c346dc8';
-    var apiURI = `http://api.openweathermap.org/data/2.5/weather?q=Yongin,kr&units=metric&appid=${apiKey}`;
-
-    request(apiURI, function(error, response, data){
-        if (error) {
-            throw error;
-        }
-        //console.log(response);
-        console.log(data);
-        var result = JSON.parse(data);
-        for (var item in result) {
-            console.log(item.toString(), result[item]);
-        }
-        var imgURL = `http://openweathermap.org/img/w/${result.weather[0].icon}.png`
-        console.log(imgURL);
+    wm.weatherObj(function(weather, table) {
+        var navbar = miscView.navBar(req.session, weather);
+        var view = require('./view5/weather');
+        var html = view.weather(navbar, table);
+        res.writeHead(200);
+        res.end(html);
     });
-
-    /*     $.ajax({
-        url : apiURI,
-        method : 'GET',
-        success :  (data)=> {
-          var temp = String((data.main.temp - 272)).substring(0,3); // 온도
-          var location = data.name; // 지역이름 
-          $('#chatLog').append('지역 ：' + location + ' 온도　：' + tempr　+ "도입니다. "+'\n'); // 아이콘 취득 
-          var imgURL = "http://openweathermap.org/img/w/" + data.weather[0].icon + ".png";
-          // 아이콘 표시
-          $('#img').attr("src", imgURL);
-
-          console.log(temp);
-          console.log(location);
-        }
-    }); */
 });
 app.listen(3000);

@@ -8,7 +8,7 @@ module.exports.register = function(weather) {
         </head>
         <body>
             <h1>SQLite로 만든 게시판</h1>
-            <h4><a href="/">홈으로</a></h4>
+            <h4><a href="/">홈으로</a>&nbsp;&nbsp;&nbsp;${weather}</h4>
             <hr><br>
             <h3>사용자 등록</h3><br>
             <form action="/register_proc" method="post">
