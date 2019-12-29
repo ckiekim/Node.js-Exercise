@@ -3,28 +3,21 @@ const RED = 11;     // Red, Pin11-GPIO17
 const GREEN = 21;   // Green, Pin21-GPIO9
 const YELLOW = 19;  // Yellow, Pin19-GPIO10
 
-rpio.open(RED, rpio.OUTPUT, rpio.LOW);
+rpio.open(RED, rpio.OUTPUT, rpio.HIGH);
 rpio.open(GREEN, rpio.OUTPUT, rpio.LOW);
 rpio.open(YELLOW, rpio.OUTPUT, rpio.LOW);
 
-for (var i=0; i<5; i++) {
-    rpio.write(RED, rpio.HIGH);
-    rpio.msleep(500);
-    rpio.write(RED, rpio.LOW);
-    rpio.write(GREEN, rpio.HIGH);
-    rpio.msleep(500);
-    rpio.write(GREEN, rpio.LOW);
-    rpio.write(YELLOW, rpio.HIGH);
-    rpio.msleep(500);
-    rpio.write(RED, rpio.HIGH);
-    rpio.write(GREEN, rpio.HIGH);
-    rpio.sleep(1);
-    rpio.write(RED, rpio.LOW);
-    rpio.write(GREEN, rpio.LOW);
-    rpio.write(YELLOW, rpio.LOW);
-    rpio.sleep(1);  
-}
+// Toggle the state of the LED every 200ms
+const iv = setInterval(function() {
+    rpio.write(RED, rpio.read(RED) ^ 1);
+    rpio.write(GREEN, rpio.read(GREEN) ^ 1);
+    rpio.write(YELLOW, rpio.read(YELLOW) ^ 1);
+}, 200);
 
-rpio.close(RED);
-rpio.close(GREEN);
-rpio.close(YELLOW);
+// Stop blinking the LED after 5 seconds
+setTimeout(function() {
+    clearInterval(iv); // Stop blinking
+    rpio.close(RED);
+    rpio.close(GREEN);
+    rpio.close(YELLOW);
+}, 5000);
