@@ -10,7 +10,7 @@ function htmlString(title, description) {
             <meta charset="utf-8">
         </head>
         <body>
-            <h1>Web 프로그래밍 기술</h1>
+            <h1><a href="/">Web 프로그래밍 기술</a></h1>
             <h3><ul>
                 <li><a href="/?title=HTML5">HTML5</a></li>
                 <li><a href="/?title=CSS3">CSS3</a></li>
