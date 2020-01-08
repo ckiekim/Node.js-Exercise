@@ -44,8 +44,7 @@ app.get('/', function(req, res) {
             });
             var view = require('./view/list');
             var html = view.list(tr);
-            res.writeHead(200);
-            res.end(html);
+            res.send(html);
         });
         db.close();
     } else {    // 게시판 개별 글 상세조회
@@ -61,8 +60,7 @@ app.get('/', function(req, res) {
             stmt.finalize();
             var view = require('./view/eachview');
             var html = view.eachview(result.id, result.title, result.writer, result.ts, result.content);
-            res.writeHead(200);
-            res.end(html);
+            res.send(html);
             //console.log(result.id, result.title, result.writer, result.ts, result.content);
         });
         db.close();
@@ -71,8 +69,7 @@ app.get('/', function(req, res) {
 app.get('/create', function(req, res) {
     var view = require('./view/create');
     var html = view.create();
-    res.writeHead(200);
-    res.end(html);
+    res.send(html);
 });
 app.post('/create_proc', function(req, res) {   
     var title = req.body.title;
@@ -109,8 +106,7 @@ app.get('/update', function(req, res) {
         var view = require('./view/update');
         var content = result.content.replace(/<br>/g, '\r\n');
         var html = view.update(result.id, result.title, result.writer, result.ts, content);
-        res.writeHead(200);
-        res.end(html);
+        res.send(html);
         //console.log(result.id, result.title, result.writer, result.ts, result.content);
     });
     db.close();
@@ -124,17 +120,15 @@ app.post('/update_proc', function(req, res) {
     var stmt = db.prepare(updateSql);
     stmt.run(title, content, idVal, function() {
         console.log('id =', idVal, '글이 수정되었습니다.');
-        stmt.finalize();
-        res.writeHead(302, {Location: '/'});
-        res.end();
+        res.send();
     });
+    stmt.finalize();
     db.close();
 });
 app.get('/delete', function(req, res) {
     var view = require('./view/delete');
     var html = view.delete(req.query.id);
-    res.writeHead(200);
-    res.end(html);
+    res.send(html);
 });
 app.post('/delete_proc', function(req, res) {
     var idVal = parseInt(req.body.id);
@@ -143,17 +137,15 @@ app.post('/delete_proc', function(req, res) {
     var stmt = db.prepare(deleteSql);
     stmt.run(idVal, function() {
         console.log('id =', idVal, '글이 삭제되었습니다.');
-        stmt.finalize();
-        res.writeHead(302, {Location: '/'});
-        res.end();
+        res.redirect('/');
     });
+    stmt.finalize();
     db.close();
 });
 app.get('/register', function(req, res) {
     var view = require('./view/register');
     var html = view.register();
-    res.writeHead(200);
-    res.end(html);
+    res.send(html);
 });
 app.post('/register_proc', function(req, res) {
     var userId = req.body.id;
@@ -178,8 +170,7 @@ app.post('/register_proc', function(req, res) {
             // 패스워드가 동일한지 확인
             if (password !== password2) {
                 console.log('패스워드 불일치');
-                res.writeHead(302, {Location: '/'});
-                res.end();
+                res.redirect('/');
             } else {
                 bcrypt.genSalt(10, function(err, salt) {
                     if (err) {
@@ -191,8 +182,7 @@ app.post('/register_proc', function(req, res) {
                             stmt.run(userId, userName, hash, tel, email, function() {
                                 console.log('사용자 등록 완료');
                                 stmt.finalize();
-                                res.writeHead(302, {Location: '/'});
-                                res.end();
+                                res.redirect('/');
                             });
                         });
                     }
@@ -200,8 +190,7 @@ app.post('/register_proc', function(req, res) {
             }
         } else {
             console.log('중복된 사용자 ID 있음');
-            res.writeHead(302, {Location: '/'});
-            res.end();
+            res.redirect('/');
         }
         stmt.finalize();
     });
@@ -210,8 +199,7 @@ app.post('/register_proc', function(req, res) {
 app.get('/login', function(req, res) {
     var view = require('./view/login');
     var html = view.login();
-    res.writeHead(200);
-    res.end(html);
+    res.send(html);
 });
 app.post('/login_proc', function(req, res) {
     var userId = req.body.id;
@@ -229,8 +217,7 @@ app.post('/login_proc', function(req, res) {
             console.log("없는 사용자 ID 에러");
             var view = require('./view/login');
             var html = view.login();
-            res.writeHead(200);
-            res.end(html);
+            res.send(html);
         } else {
             bcrypt.compare(password, result.password, function(err, result) {
                 if (err) {
@@ -239,19 +226,20 @@ app.post('/login_proc', function(req, res) {
                 }
                 if (result) {
                     console.log("로그인 성공");
-                    res.writeHead(302, {Location: '/'});
-                    res.end();
+                    res.redirect('/');
                 } else {
                     console.log("패스워드 불일치");
                     var view = require('./view/login');
                     var html = view.login();
-                    res.writeHead(200);
-                    res.end(html);
+                    res.send(html);
                 }
             });
         }
         stmt.finalize();
     });
     db.close();
+});
+app.use(function(req, res, next) {
+    res.status(404).send('404 Error: Page not found');
 });
 app.listen(3000);
