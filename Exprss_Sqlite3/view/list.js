@@ -11,7 +11,11 @@ module.exports.list = function(list) {
             <h4><a href='/create'>글 쓰기</a></h4>
             <hr><br>
             <table>
-                <tr><th>ID</th><th>제목</th><th>글쓴이</th><th>최종수정일시</th><th>선택</th></tr>
+                <tr><th width="50">ID</th>
+                    <th width="200">제목</th>
+                    <th width="100">글쓴이</th>
+                    <th width="150">최종수정일시</th>
+                    <th width="100">선택</th></tr>
                 ${list}
             </table>
         </body>

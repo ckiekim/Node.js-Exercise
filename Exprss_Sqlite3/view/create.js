@@ -11,7 +11,7 @@ module.exports.create = function() {
             <h4><a href="/">홈으로</a></h4>
             <hr><br>
             <h3>글 쓰기</h3><br>
-            <form action="/create_proc" method="post">
+            <form action="/create" method="post">
                 <table>
                     <tr><th>항목</th><th>내용</th></tr>
                     <tr><td>제목</td><td><input type="text" name="title"></td></tr>

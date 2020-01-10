@@ -12,7 +12,7 @@ module.exports.login = function() {
                 <a href='/register'>사용자 등록</a></h4>
             <hr><br>
             <h3>로그인</h3><br>
-            <form action="/login_proc" method="post">
+            <form action="/login" method="post">
                 <table>
                     <tr><th>항목</th><th>내용</th></tr>
                     <tr><td>Login ID</td><td><input type="text" name="id"></td></tr>
