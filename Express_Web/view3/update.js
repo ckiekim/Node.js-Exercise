@@ -22,8 +22,7 @@ module.exports.update = function(navBar, row) {
                     <tr><td width="180">ID</td><td>${row.id}</td></tr>
                     <tr><td>제목</td>
                         <td style="text-align: left;"><input type="text" size="40" name="title" value="${row.title}"></td></tr>
-                    <tr><td>글쓴이</td>
-                        <td style="text-align: left;"><input type="text" size="40" name="userId" value="${row.userId}"></td></tr>
+                    <tr><td>글쓴이</td><td>${row.userId}</td></tr>
                     <tr><td>최종 수정시간</td><td>${row.ts}</td></tr> 
                     <tr><td>조회수</td><td>${row.hit}</td></tr>                    
                     <tr><td>내용</td>

@@ -19,8 +19,8 @@ module.exports.itemView = function(navBar, trs) {
         <table>
             <thead>
                 <tr>
-                    <th width="150">항목</th>
-                    <th width="300">값</th>
+                    <th width="150" style="text-align: center">항목</th>
+                    <th width="500" style="text-align: center">값</th>
                 </tr>
             </thead>
             <tbody>

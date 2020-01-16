@@ -16,7 +16,7 @@ module.exports.register = function(navBar) {
             <hr>
             <h4>${navBar}</h4>
             <hr>
-            <form action="/register" method="post">
+            <form action="/user/register" method="post">
                 <table>
                     <tr><td width="150">사용자 ID</td>
                         <td style="text-align: left;"><input type="text" size="40" name="uid"></td></tr>

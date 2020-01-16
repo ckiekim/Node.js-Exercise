@@ -8,18 +8,43 @@ module.exports = {
         list += '</ul>';
         return list;
     },
-    navMain: function() {
-        return `<a href="/">홈으로</a>&nbsp;&nbsp;
-                <a href="/create">글쓰기</a>&nbsp;&nbsp;
-                <a href="/register">사용자가입</a>&nbsp;&nbsp;
-                <a href="/login">로그인</a>`;
+    navMain: function(userName) {
+        if (userName !== undefined) {
+            return `<a href="/create">글쓰기</a>&nbsp;&nbsp;
+                    <a href="/user/logout">로그아웃</a>&nbsp;&nbsp;
+                    ${userName} 님 환영합니다.`;
+        } else {
+            return `<a href="/">홈으로</a>&nbsp;&nbsp;
+                    <a href='/user/login'>로그인</a>&nbsp;&nbsp;
+                    <a href='/user/register'>사용자 등록</a>`;
+        }
     },
-    navList: function(id) {
-        return `<a href="/">홈으로</a>&nbsp;&nbsp;
-                <a href="/update/${id}">수정하기</a>&nbsp;&nbsp;
-                <a href="/delete/${id}">삭제하기</a>`;
+    navList: function(userName, id) {
+        if (userName !== undefined) {
+            return `<a href="/">홈으로</a>&nbsp;&nbsp;
+                    <a href="/create">글쓰기</a>&nbsp;&nbsp;
+                    <a href="/update/${id}">수정하기</a>&nbsp;&nbsp;
+                    <a href="/delete/${id}">삭제하기</a>&nbsp;&nbsp;
+                    <a href="/user/logout">로그아웃</a>&nbsp;&nbsp;
+                    ${userName} 님 환영합니다.`;  
+        } else {
+            return `<a href="/">홈으로</a>&nbsp;&nbsp;
+                    <a href='/user/login'>로그인</a>&nbsp;&nbsp;
+                    <a href='/user/register'>사용자 등록</a>`;
+        }
     },
-    navOp: function() {
+    navOp: function(userName) {
+        if (userName!== undefined) {
+            return `<a href="/">홈으로</a>&nbsp;&nbsp;
+                    <a href="/user/logout">로그아웃</a>&nbsp;&nbsp;
+                    ${userName} 님 환영합니다.`;  
+        } else {
+            return `<a href="/">홈으로</a>&nbsp;&nbsp;
+                    <a href='/user/login'>로그인</a>&nbsp;&nbsp;
+                    <a href='/user/register'>사용자 등록</a>`;
+        }
+    },
+    navUser: function() {
         return `<a href="/">홈으로</a>`;
     },
     tableMain: function(row) {
