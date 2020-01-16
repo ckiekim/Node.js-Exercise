@@ -11,7 +11,7 @@ module.exports.update = function(navbar, id, title, writer, ts, content) {
             ${navbar}
             <hr><br>
             <h3>글 수정하기</h3><br>
-            <form action="/update" method="post">
+            <form action="/update_proc" method="post">
                 <input type="hidden" name="id" value=${id}>
                 <table>
                     <tr><th>항목</th><th>내용</th></tr>

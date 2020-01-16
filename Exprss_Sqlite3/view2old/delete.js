@@ -11,7 +11,7 @@ module.exports.delete = function(navbar, id) {
             ${navbar}
             <hr><br>
             <h3>글 삭제하기</h3><br>
-            <form action="/delete" method="post">
+            <form action="/delete_proc" method="post">
                 <input type="hidden" name="id" value=${id}>
                 <h4>id 값이 ${id}인 글을 삭제하시겠습니까?</h4>
                 <input type="submit" value="삭제">

@@ -1,4 +1,4 @@
-module.exports.register = function() {
+module.exports.register = function(weather) {
     return `
         <!doctype html>
         <html>
@@ -11,7 +11,7 @@ module.exports.register = function() {
             <h4><a href="/">홈으로</a></h4>
             <hr><br>
             <h3>사용자 등록</h3><br>
-            <form action="/register" method="post">
+            <form action="/register_proc" method="post">
                 <table>
                     <tr><th>항목</th><th>내용</th></tr>
                     <tr><td>Login ID</td><td><input type="text" name="id"></td></tr>

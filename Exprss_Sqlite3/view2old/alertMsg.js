@@ -7,7 +7,7 @@ module.exports.alertMsg = function(message, url) {
             <meta charset="utf-8">
         </head>
         <body>
-            <script>
+            <script type="text/javascript">
                 var message = '${message}';
                 var returnUrl = '${url}';
                 alert(message);

@@ -1,5 +1,5 @@
 module.exports.create = function(navbar) {
-    return ` 
+    return `
         <!doctype html>
         <html>
         <head>
@@ -11,7 +11,7 @@ module.exports.create = function(navbar) {
             ${navbar}
             <hr><br>
             <h3>글 쓰기</h3><br>
-            <form action="/create" method="post">
+            <form action="/create_proc" method="post">
                 <table>
                     <tr><th>항목</th><th>내용</th></tr>
                     <tr><td>제목</td><td><input type="text" name="title"></td></tr>
