@@ -8,40 +8,40 @@ module.exports = {
         list += '</ul>';
         return list;
     },
-    navMain: function(userName) {
+    navMain: function(userName, weather) {
         if (userName !== undefined) {
             return `<a href="/create">글쓰기</a>&nbsp;&nbsp;
                     <a href="/user/logout">로그아웃</a>&nbsp;&nbsp;
-                    ${userName} 님 환영합니다.`;
+                    ${userName} 님 환영합니다.&nbsp;&nbsp;&nbsp;${weather}`;
         } else {
             return `<a href="/">홈으로</a>&nbsp;&nbsp;
                     <a href='/user/login'>로그인</a>&nbsp;&nbsp;
-                    <a href='/user/register'>사용자 등록</a>`;
+                    <a href='/user/register'>사용자 등록</a>&nbsp;&nbsp;&nbsp;${weather}`;
         }
     },
-    navList: function(userName, id) {
+    navList: function(userName, id, weather) {
         if (userName !== undefined) {
             return `<a href="/">홈으로</a>&nbsp;&nbsp;
                     <a href="/create">글쓰기</a>&nbsp;&nbsp;
                     <a href="/update/${id}">수정하기</a>&nbsp;&nbsp;
                     <a href="/delete/${id}">삭제하기</a>&nbsp;&nbsp;
                     <a href="/user/logout">로그아웃</a>&nbsp;&nbsp;
-                    ${userName} 님 환영합니다.`;  
+                    ${userName} 님 환영합니다.&nbsp;&nbsp;&nbsp;${weather}`;  
         } else {
             return `<a href="/">홈으로</a>&nbsp;&nbsp;
                     <a href='/user/login'>로그인</a>&nbsp;&nbsp;
-                    <a href='/user/register'>사용자 등록</a>`;
+                    <a href='/user/register'>사용자 등록</a>&nbsp;&nbsp;&nbsp;${weather}`;
         }
     },
-    navOp: function(userName) {
+    navOp: function(userName, weather) {
         if (userName!== undefined) {
             return `<a href="/">홈으로</a>&nbsp;&nbsp;
                     <a href="/user/logout">로그아웃</a>&nbsp;&nbsp;
-                    ${userName} 님 환영합니다.`;  
+                    ${userName} 님 환영합니다.&nbsp;&nbsp;&nbsp;${weather}`;  
         } else {
             return `<a href="/">홈으로</a>&nbsp;&nbsp;
                     <a href='/user/login'>로그인</a>&nbsp;&nbsp;
-                    <a href='/user/register'>사용자 등록</a>`;
+                    <a href='/user/register'>사용자 등록</a>&nbsp;&nbsp;&nbsp;${weather}`;
         }
     },
     navUser: function() {

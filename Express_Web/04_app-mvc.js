@@ -1,5 +1,7 @@
+/*
+ *  MVC BBS Web - Controller Module
+ */
 const express = require('express');
-const sqlite3 = require('sqlite3').verbose();
 const bodyParser = require('body-parser');
 const session = require('express-session');
 const FileStore = require('session-file-store')(session);
@@ -7,14 +9,7 @@ const sanitizeHtml = require('sanitize-html');      // XSS(Cross-site scripting)
 const wm = require('./03_weather-module');
 const template = require('./view3/template');
 const alert = require('./view3/alertMsg');
-
-var listSql = `SELECT b.id, b.title, u.name, strftime('%Y-%m-%d %H:%M', b.timestamp, 'localtime') ts, b.content, b.hit FROM bbs b join user u on b.userId=u.uid`;
-var searchSql = `SELECT id, title, userId, strftime('%Y-%m-%d %H:%M', timestamp, 'localtime') ts, content, hit FROM bbs where id=?`;
-var incHitSql = `UPDATE bbs SET hit=(SELECT hit FROM bbs WHERE id=?)+1 WHERE id=?`;
-var insertSql = `INSERT INTO bbs(title, userId, content) VALUES(?, ?, ?)`;
-var updateSql = `UPDATE bbs SET title=?, userId=?, timestamp=datetime('now'), content=? WHERE id=?`;
-var deleteSql = `DELETE FROM bbs WHERE id=?`;
-var db = new sqlite3.Database("db/bbs.db");
+const dbModule = require('./04_db-module');
 
 const app = express();
 const userRouter = require('./03_userRouter');
@@ -30,8 +25,8 @@ app.use(session({
 app.use('/user', userRouter);
 
 app.get('/', function(req, res) {
-    let trs = '';
-    db.all(listSql, function(err, rows) {
+    dbModule.listItems(function(rows) {
+        let trs = '';
         for(let row of rows) {
             trs += template.tableMain(row);
         }
@@ -45,13 +40,8 @@ app.get('/', function(req, res) {
 });
 app.get('/id/:id', function(req, res) {
     let idVal = parseInt(req.params.id);
-    db.serialize(function() {
-        var stmt = db.prepare(incHitSql);
-        stmt.run(idVal, idVal);
-        stmt.finalize();
-        
-        stmt = db.prepare(searchSql);
-        stmt.get(idVal, function(err, row) {
+    dbModule.incHit(idVal, function() {
+        dbModule.getItem(idVal, function(row) {
             wm.getWeather(function(weather) {
                 let navBar = template.navList(req.session.userName, idVal, weather);
                 let trs = template.tableItem(row);
@@ -60,8 +50,16 @@ app.get('/id/:id', function(req, res) {
                 res.send(html);
             });
         });
-        stmt.finalize();
     });
+    /* dbModule.viewItem(idVal, function(row) {
+        wm.getWeather(function(weather) {
+            let navBar = template.navList(req.session.userName, idVal, weather);
+            let trs = template.tableItem(row);
+            let view = require('./view3/itemView');
+            let html = view.itemView(navBar, trs);
+            res.send(html);
+        });
+    }); */
 });
 app.get('/create', function(req, res) {
     wm.getWeather(function(weather) {
@@ -72,23 +70,19 @@ app.get('/create', function(req, res) {
     });
 });
 app.post('/create', function(req, res) {
-    //let title = req.body.title;
     let title = sanitizeHtml(req.body.title);
     let userId = req.session.userId;
-    //let content = req.body.content;
     let content = sanitizeHtml(req.body.content, {
         allowedTags: ['img'],
         allowedAttributes: {'img': ['src', 'width', 'height']},
     });
-    let stmt = db.prepare(insertSql);
-    stmt.run(title, userId, content);
-    stmt.finalize();
-    res.redirect('/');
+    dbModule.insertItem(title, userId, content, function() {
+        res.redirect('/');
+    });
 });
 app.get('/update/:id', function(req, res) {
     let idVal = parseInt(req.params.id);
-    let stmt = db.prepare(searchSql);
-    stmt.get(idVal, function(err, row) {
+    dbModule.getItem(idVal, function(row) {
         if (row.userId === req.session.userId) {
             wm.getWeather(function(weather) {
                 let navBar = template.navOp(req.session.userName, weather);
@@ -101,28 +95,22 @@ app.get('/update/:id', function(req, res) {
             res.send(html);
         }
     });
-    stmt.finalize();
 });
 app.post('/update', function(req, res) {
     let idVal = parseInt(req.body.id);
-    //let title = req.body.title;
     let title = sanitizeHtml(req.body.title);
     let userId = req.session.userId;
-    //let content = req.body.content;
     let content = sanitizeHtml(req.body.content, {
         allowedTags: ['img'],
         allowedAttributes: {'img': ['src', 'width', 'height']},
     });
-
-    let stmt = db.prepare(updateSql);
-    stmt.run(title, userId, content, idVal);
-    stmt.finalize();
-    res.redirect(`/id/${idVal}`);
+    dbModule.updateItem(title, userId, content, idVal, function() {
+        res.redirect(`/id/${idVal}`);
+    });
 });
 app.get('/delete/:id', function(req, res) {
     let idVal = parseInt(req.params.id);
-    let stmt = db.prepare(searchSql);
-    stmt.get(idVal, function(err, row) {
+    dbModule.getItem(idVal, function(row) {
         if (row.userId === req.session.userId) {
             wm.getWeather(function(weather) {
                 let navBar = template.navOp(req.session.userName, weather);
@@ -135,20 +123,17 @@ app.get('/delete/:id', function(req, res) {
             res.send(html);
         }
     });
-    stmt.finalize();
 });
 app.post('/delete', function(req, res) {
     let idVal = parseInt(req.body.id);
-    
-    let stmt = db.prepare(deleteSql);
-    stmt.run(idVal);
-    stmt.finalize();
-    res.redirect('/');
+    dbModule.deleteItem(idVal, function() {
+        res.redirect('/');
+    });
 });
 app.get('/weather', function(req, res) {
     wm.weatherObj(function(weather, table) {
         var navBar = template.navMain(req.session.userName, weather);
-        var view = require('./view3/weather');
+        var view = require('./view3/weather'); 
         var html = view.weather(navBar, table);
         res.send(html);
     });

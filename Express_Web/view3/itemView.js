@@ -12,7 +12,7 @@ module.exports.itemView = function(navBar, trs) {
         </style>
     </head>
     <body>
-        <h1>SQLite3로 만든 게시판</h1>
+        <h1><img src="read.jpg" height="60"> SQLite3로 만든 게시판</h1>
         <hr>
         <h4>${navBar}</h4>
         <hr>
