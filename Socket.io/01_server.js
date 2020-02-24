@@ -4,20 +4,20 @@ var http = require('http').Server(app); //1
 var io = require('socket.io')(http);    //1
 
 app.get('/',function(req, res){  //2
-    res.sendFile(__dirname + '/client.html');
+    res.sendFile(__dirname + '/01_client.html');
 });
 
 var count=1;
-io.on('connection', function(socket){ //3
-    console.log('user connected: ', socket.id);  //3-1
-    var name = "user" + count++;                 //3-1
-    io.to(socket.id).emit('change name',name);   //3-1
+io.on('connection', function(socket){           //3
+    console.log('user connected: ', socket.id);     //3-1
+    var name = "user" + count++;                    //3-1
+    io.to(socket.id).emit('change name', name);     //3-1
 
-    socket.on('disconnect', function(){ //3-2
+    socket.on('disconnect', function() {                //3-2
         console.log('user disconnected: ', socket.id);
     });
 
-    socket.on('send message', function(name,text){ //3-3
+    socket.on('send message', function(name, text){     //3-3
         var msg = name + ' : ' + text;
         console.log(msg);
         io.emit('receive message', msg);
@@ -29,7 +29,7 @@ http.listen(3000, function(){ //4
 });
 
 /*
-1. socket.io를 사용하는 경우 Node JS 첫걸음/Hello World!에서와는 다르게 app를 http에 연결시키고, 이 http를 다시 socket.io에 연결시키는 과정이 필요합니다.
+1. socket.io를 사용하는 경우 app를 http에 연결시키고, 이 http를 다시 socket.io에 연결시키는 과정이 필요합니다.
    이는 socket.io가 express를 직접 받아들이지 못하기 때문입니다. socket.io는 io라는 변수명으로 서버에서 사용됩니다.
 
 2. 모든 request는 client.html를 response하도록 설정하였습니다.
